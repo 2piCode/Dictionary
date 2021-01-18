@@ -1,0 +1,8 @@
+Dictionary.csproj
+Dictionary.sln
+App.config
+
+/Properties
+/obj
+/bin
+.vs/
