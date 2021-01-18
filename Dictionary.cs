@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace DictionaryApp
 {
-    class Program
+    public class Dictionary
     {
-        static void Main(string[] args)
-        {
+        private string fileName { get; }
 
+        public Dictionary()
+        {
+            fileName = "Dictionary.xml";
         }
     }
 }
