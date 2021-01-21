@@ -32,20 +32,52 @@ namespace DictionaryApp
 
         public void AddWord(string DictionaryName, string word, string translation)
         {
+            bool wordIsInDictionary = false;
 
             XmlDocument doc = new XmlDocument();
             doc.Load($"{DictionaryName}.xml");
 
             XmlNode root = doc.DocumentElement;
 
-            XmlNode newWord = doc.CreateElement(word.ToLower());
-            XmlNode translate = doc.CreateElement("Translate");
+            XmlNode wordPosition = null;
+
+            foreach (XmlNode node in root.ChildNodes)
+            {
+                if (node.Name == word.ToLower())
+                {
+                    wordPosition = node;
+                    wordIsInDictionary = true;
+                    break;
+                }
+            }
+
+            if (wordIsInDictionary)
+            {
+                foreach(XmlNode node in wordPosition.ChildNodes)
+                {
+                    foreach  (XmlNode childNode in node.ChildNodes)
+                    {
+                        if(childNode.Value == translation.ToLower())
+                        {
+                            Console.WriteLine("This translation is already in the dictionary");
+                            return;
+                        }
+                    }
+                }
+            }
+
+            if (wordPosition == null)
+                wordPosition = doc.CreateElement(word.ToLower());
+
+            XmlNode translate = doc.CreateElement($"A{wordPosition.ChildNodes.Count + 1}");
             XmlNode wordTranslation = doc.CreateTextNode(translation.ToLower());
 
             translate.AppendChild(wordTranslation);
-            newWord.AppendChild(translate);
 
-            root.AppendChild(newWord);
+            wordPosition.AppendChild(translate);
+           
+            if(!wordIsInDictionary)
+                root.AppendChild(wordPosition);
 
             doc.Save($"{DictionaryName}.xml");
         }
@@ -98,7 +130,7 @@ namespace DictionaryApp
 
             doc.Save($"{DictionaryName}.xml");
         }
-
+        
         private void OutputNode(XmlNode root, int indent = 0)
         {
             Console.Write($"{new string('\t', indent)}{root.LocalName} ");
