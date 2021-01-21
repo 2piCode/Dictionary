@@ -9,28 +9,26 @@ namespace DictionaryApp
 {
     public class Dictionary
     {
-        private string fileName { get; }
-
-        public Dictionary()
+        private string DictionaryName { get; }
+         
+        public Dictionary(string DictionaryName)
         {
-            fileName = "Dictionary.xml";
+            this.DictionaryName = DictionaryName;
+
+            try
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.Load($"{DictionaryName}.xml");
+            }
+            catch (Exception)
+            {
+
+                Console.WriteLine("First, create a dictionary using the function: CreateNewDictionary");
+                throw;
+            }
         }
-
-        public void CreateNewDictionary(string DictionaryName)
-        {
-            XmlTextWriter writer = new XmlTextWriter($"{DictionaryName}.xml", Encoding.Unicode);
-            writer.Formatting = Formatting.Indented;
-
-            writer.WriteStartDocument();
-
-            writer.WriteStartElement($"{DictionaryName}");
-
-            writer.WriteEndElement();
-
-            writer.Close();
-        }
-
-        public void AddWord(string DictionaryName, string word, string translation)
+        
+        public void AddWord(string word, string translation)
         {
             bool wordIsInDictionary = false;
 
@@ -43,7 +41,7 @@ namespace DictionaryApp
 
             foreach (XmlNode node in root.ChildNodes)
             {
-                if (node.Name == word.ToLower())
+                if (node.Name.ToLower() == word.ToLower())
                 {
                     wordPosition = node;
                     wordIsInDictionary = true;
@@ -51,7 +49,7 @@ namespace DictionaryApp
                 }
             }
 
-            if (wordIsInDictionary && CheckTranslation(wordPosition, translation))
+            if (wordIsInDictionary && CheckTranslationInDictinoary(wordPosition, translation))
             {
                 Console.WriteLine("This translation is already in the dictionary");
                 return;
@@ -61,7 +59,7 @@ namespace DictionaryApp
                 wordPosition = doc.CreateElement(word.ToLower());
 
             XmlNode translate = doc.CreateElement($"A{wordPosition.ChildNodes.Count + 1}");
-            XmlNode wordTranslation = doc.CreateTextNode(translation.ToLower());
+            XmlNode wordTranslation = doc.CreateTextNode(translation);
 
             translate.AppendChild(wordTranslation);
 
@@ -73,7 +71,7 @@ namespace DictionaryApp
             doc.Save($"{DictionaryName}.xml");
         }
 
-        public void ReadDictionary(string DictionaryName)
+        public void ReadDictionary()
         {
             XmlDocument doc = new XmlDocument();
             doc.Load($"{DictionaryName}.xml");
@@ -84,7 +82,7 @@ namespace DictionaryApp
             Console.WriteLine();
         }
 
-        public void SearchTranslationWord(string DictionaryName, string word)
+        public void SearchTranslationWord(string word)
         {
             XmlDocument doc = new XmlDocument();
             doc.Load($"{DictionaryName}.xml");
@@ -102,7 +100,7 @@ namespace DictionaryApp
             Console.WriteLine();
         }
 
-        public void DeleteWord(string DictionaryName, string word)
+        public void DeleteWord(string word)
         {
             XmlDocument doc = new XmlDocument();
             doc.Load($"{DictionaryName}.xml");
@@ -111,7 +109,7 @@ namespace DictionaryApp
 
             foreach (XmlNode node in root.ChildNodes)
             {
-                if(node.Name == word.ToLower())
+                if(node.Name.ToLower() == word.ToLower())
                 {
                     root.RemoveChild(node);
                     Console.WriteLine("Removal done");
@@ -122,7 +120,7 @@ namespace DictionaryApp
             doc.Save($"{DictionaryName}.xml");
         }
 
-        public void DeleteTranslate(string DictionaryName, string word, string translate)
+        public void DeleteTranslate(string word, string translate)
         {
             XmlDocument doc = new XmlDocument();
             doc.Load($"{DictionaryName}.xml");
@@ -148,13 +146,13 @@ namespace DictionaryApp
             doc.Save($"{DictionaryName}.xml");
         }
         
-        private bool CheckTranslation( XmlNode wordPosition, string translation)
+        private bool CheckTranslationInDictinoary(XmlNode wordPosition, string translation)
         { 
             foreach (XmlNode node in wordPosition.ChildNodes)
             {
                 foreach (XmlNode childNode in node.ChildNodes)
                 {
-                    if (childNode.Value == translation.ToLower())
+                    if (childNode.Value.ToLower() == translation.ToLower())
                         return true;
                 }
             }
