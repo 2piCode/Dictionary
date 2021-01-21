@@ -28,6 +28,18 @@ namespace DictionaryApp
 
         static void WriteNameDictionary(string DictionaryName)
         {
+            using (StreamReader sr = new StreamReader("Dictionary.txt"))
+            {
+                while (!sr.EndOfStream)
+                {
+                    if (DictionaryName == sr.ReadLine())
+                    {
+                        Console.WriteLine("Such a dictionary already exists");
+                        return;
+                    }
+                }
+            }
+
             using (StreamWriter sw = new StreamWriter("Dictionary.txt", true, System.Text.Encoding.Default))
             {
                 sw.WriteLine(DictionaryName);
@@ -36,20 +48,26 @@ namespace DictionaryApp
 
         static void Main(string[] args)
         {
-            CreateNewDictionary("Russian_English");
+            CreateNewDictionary("English_Russian");
 
             Dictionary dictionary = new Dictionary("English_Russian");
 
             //dictionary.CreateNewDictionary("English_Russian");
             //dictionary.AddWord("Hello", "Привет");
-            //dictionary.AddWord("English_Russian", "Word", "Программа");
+            dictionary.AddWord( "Word", "Программа");
+            dictionary.AddWord("Word", "Слово");
 
             //dictionary.ReadDictionary();
 
             //dictionary.DeleteWord("Hello");
 
             dictionary.ReadDictionary();
-                
+
+            dictionary.ChangeWord("Word", "Power");
+
+            //dictionary.ChangeTranslate("Hello", "Привет", "Пока");
+
+            dictionary.ReadDictionary();
             //dictionary.DeleteWord("English_Russian", "Word");
 
             //dictionary.SearchTranslationWord("English_Russian", "Word");
