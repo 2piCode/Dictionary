@@ -61,6 +61,24 @@ namespace DictionaryApp
             Console.WriteLine();
         }
 
+        public void SearchTranslationWord(string DictionaryName, string word)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load($"{DictionaryName}.xml");
+
+            XmlNode root = doc.DocumentElement;
+
+            foreach (XmlNode node in root.ChildNodes)
+            {
+                if(node.Name == word)
+                {
+                    OutputNode(node);
+                    break;
+                }
+            }
+            Console.WriteLine();
+        }
+
         private void OutputNode(XmlNode root, int indent = 0)
         {
             Console.Write($"{new string('\t', indent)}{root.LocalName} ");
