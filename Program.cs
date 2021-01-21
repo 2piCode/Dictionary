@@ -11,11 +11,13 @@ namespace DictionaryApp
     {
         static void Main(string[] args)
         {
-            Dictionary dictonary = new Dictionary();
+            Dictionary dictionary = new Dictionary();
 
-            dictonary.CreateNewDictionary("English_Russian");
-            dictonary.AddWord("English_Russian", "Hello", "Привет");
-            dictonary.AddWord("English_Russian", "Word", "Слово");
+            //dictionary.CreateNewDictionary("English_Russian");
+            //dictionary.AddWord("English_Russian", "Hello", "Привет");
+            //dictionary.AddWord("English_Russian", "Word", "Слово");
+
+            dictionary.ReadDictionary("English_Russian");
         }
     }
 

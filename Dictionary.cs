@@ -24,7 +24,7 @@ namespace DictionaryApp
             writer.WriteStartDocument();
 
             writer.WriteStartElement($"{DictionaryName}");
-            
+
             writer.WriteEndElement();
 
             writer.Close();
@@ -34,7 +34,6 @@ namespace DictionaryApp
         {
 
             XmlDocument doc = new XmlDocument();
-            
             doc.Load($"{DictionaryName}.xml");
 
             XmlNode root = doc.DocumentElement;
@@ -46,10 +45,40 @@ namespace DictionaryApp
             translate.AppendChild(wordTranslation);
             newWord.AppendChild(translate);
 
-
             root.AppendChild(newWord);
 
             doc.Save($"{DictionaryName}.xml");
         }
+
+        public void ReadDictionary(string DictionaryName)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load($"{DictionaryName}.xml");
+
+            XmlNode root = doc.DocumentElement;
+
+            OutputNode(root);
+            Console.WriteLine();
+        }
+
+        private void OutputNode(XmlNode root, int indent = 0)
+        {
+            Console.Write($"{new string('\t', indent)}{root.LocalName} ");
+
+            foreach (var child in root.ChildNodes)
+            {
+                if (child is XmlElement node)
+                {
+                    Console.WriteLine();
+                    OutputNode(node, indent + 1);
+                }
+
+                if (child is XmlText text)
+                {
+                    Console.Write($"- {text.InnerText}");
+                }
+            }
+        }
+
     }
 }
