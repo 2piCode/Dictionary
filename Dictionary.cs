@@ -38,9 +38,9 @@ namespace DictionaryApp
 
             XmlNode root = doc.DocumentElement;
 
-            XmlNode newWord = doc.CreateElement(word);
+            XmlNode newWord = doc.CreateElement(word.ToLower());
             XmlNode translate = doc.CreateElement("Translate");
-            XmlNode wordTranslation = doc.CreateTextNode(translation);
+            XmlNode wordTranslation = doc.CreateTextNode(translation.ToLower());
 
             translate.AppendChild(wordTranslation);
             newWord.AppendChild(translate);
@@ -70,7 +70,7 @@ namespace DictionaryApp
 
             foreach (XmlNode node in root.ChildNodes)
             {
-                if(node.Name == word)
+                if(node.Name == word.ToLower())
                 {
                     OutputNode(node);
                     break;
@@ -93,7 +93,7 @@ namespace DictionaryApp
 
                 if (child is XmlText text)
                 {
-                    Console.Write($"- {text.InnerText}");
+                    Console.Write($"- {text.Value}");
                 }
             }
         }
