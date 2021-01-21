@@ -51,19 +51,10 @@ namespace DictionaryApp
                 }
             }
 
-            if (wordIsInDictionary)
+            if (wordIsInDictionary && CheckTranslation(wordPosition, translation))
             {
-                foreach(XmlNode node in wordPosition.ChildNodes)
-                {
-                    foreach  (XmlNode childNode in node.ChildNodes)
-                    {
-                        if(childNode.Value == translation.ToLower())
-                        {
-                            Console.WriteLine("This translation is already in the dictionary");
-                            return;
-                        }
-                    }
-                }
+                Console.WriteLine("This translation is already in the dictionary");
+                return;
             }
 
             if (wordPosition == null)
@@ -130,7 +121,46 @@ namespace DictionaryApp
 
             doc.Save($"{DictionaryName}.xml");
         }
+
+        public void DeleteTranslate(string DictionaryName, string word, string translate)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load($"{DictionaryName}.xml");
+
+            XmlNode root = doc.DocumentElement;
+
+            foreach (XmlNode node in root.ChildNodes)
+            {
+                if (node.Name == word.ToLower() && node.ChildNodes.Count > 1)
+                {
+                    foreach (XmlNode childNode in node.ChildNodes) 
+                        {
+                        if (childNode.FirstChild.Value.ToLower() == translate.ToLower())
+                        {
+                            node.RemoveChild(childNode);
+                            Console.WriteLine("Removal done");
+                            break;
+                        }
+                    }
+                }
+            }
+
+            doc.Save($"{DictionaryName}.xml");
+        }
         
+        private bool CheckTranslation( XmlNode wordPosition, string translation)
+        { 
+            foreach (XmlNode node in wordPosition.ChildNodes)
+            {
+                foreach (XmlNode childNode in node.ChildNodes)
+                {
+                    if (childNode.Value == translation.ToLower())
+                        return true;
+                }
+            }
+            return false;
+        }
+
         private void OutputNode(XmlNode root, int indent = 0)
         {
             Console.Write($"{new string('\t', indent)}{root.LocalName} ");
