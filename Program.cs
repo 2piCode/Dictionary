@@ -15,11 +15,13 @@ namespace DictionaryApp
 
             //dictionary.CreateNewDictionary("English_Russian");
             //dictionary.AddWord("English_Russian", "Hello", "Привет");
-            //dictionary.AddWord("English_Russian", "Word", "Слово");
+            dictionary.AddWord("English_Russian", "Word", "Слово");
 
             //dictionary.ReadDictionary("English_Russian");
 
-            dictionary.SearchTranslationWord("English_Russian", "Word");
+            dictionary.DeleteWord("English_Russian", "Word");
+
+            //dictionary.SearchTranslationWord("English_Russian", "Word");
         }
     }
 
